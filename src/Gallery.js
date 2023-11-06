@@ -4,8 +4,7 @@ import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
 import ImageListItemBar from '@mui/material/ImageListItemBar';
 import IconButton from '@mui/material/IconButton';
-
-import Images from './ImageList';
+import ReorderImages from './ReorderImages';
 
 function srcset(image, width, height, rows = 1, cols = 1) {
     return {
@@ -30,6 +29,10 @@ export default function Gallery() {
         );
 
     };
+    const updateImages = images => {
+        setItems(() => images);
+    }
+
 
     return (
         <>
@@ -54,7 +57,8 @@ export default function Gallery() {
                         actionPosition="left"
                     />
                 </ImageListItem>
-                <Images items={items} featured={featured} toggleFeatured={toggleFeatured}/>
+                {/* <Images items={items} featured={featured} toggleFeatured={toggleFeatured}/> */}
+                <ReorderImages images={items} featured={featured} callback={updateImages} />
             </ImageList>
         </>
     );

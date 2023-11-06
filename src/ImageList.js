@@ -4,8 +4,7 @@ import StarBorderIcon from '@mui/icons-material/StarBorder';
 function srcset(image, width, height, rows = 1, cols = 1) {
     return {
         src: `${image}?w=${width * cols}&h=${height * rows}&fit=crop&auto=format`,
-        srcSet: `${image}?w=${width * cols}&h=${height * rows
-            }&fit=crop&auto=format&dpr=2 2x`,
+        srcSet: `${image}?w=${width * cols}&h=${height * rows}&fit=crop&auto=format&dpr=2 2x`,
     };
 }
 
@@ -29,7 +28,7 @@ export default function ImageList({ items, featured, toggleFeatured }) {
                                 <IconButton
                                     sx={{ color: 'white' }}
                                     aria-label={`star ${item.title}`}
-                                    onClick={() => toggleFeatured(item)}
+                                    // onClick={() => toggleFeatured(item)}
                                 >
                                     <StarBorderIcon />
                                 </IconButton>

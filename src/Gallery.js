@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { useState } from "react";
+import Dropzone from 'react-dropzone'
 
 import ReorderImages from './ReorderImages';
 import Bar from './Bar';
@@ -45,8 +46,20 @@ export default function Gallery() {
 
     return (
         <>
-            <Bar items={items} deleteImages={deleteImages} selectAll={selectAll}/>
+            <Bar items={items} deleteImages={deleteImages} selectAll={selectAll} />
             <ReorderImages images={items} callback={updateImages} toggleSelect={toggleSelect} deleteImages={deleteImages} style={{ margin: '10%', left: '1%', position: 'relative' }} />
+            <div style={{ margin: '10%' }}>
+                <Dropzone onDrop={acceptedFiles => console.log(acceptedFiles)}>
+                    {({ getRootProps, getInputProps }) => (
+                        <section className='bar'>
+                            <div {...getRootProps()}>
+                                <input {...getInputProps()} />
+                                <p>Drag 'n' drop some files here, or click to select files</p>
+                            </div>
+                        </section>
+                    )}
+                </Dropzone>
+            </div>
         </>
     );
 }

@@ -1,9 +1,8 @@
 import * as React from 'react';
 import { useState } from "react";
-import DeleteOutline from '@mui/icons-material/DeleteOutline';
-import IconButton from '@mui/material/IconButton';
 
 import ReorderImages from './ReorderImages';
+import Bar from './Bar';
 
 export default function Gallery() {
     const [items, setItems] = useState(itemData);
@@ -34,17 +33,25 @@ export default function Gallery() {
 
     const updateImages = (images) => setItems(() => images);
 
+    /**
+     * @function selectAll
+     * @param {Boolean} bool - true to select all, false to deselect all
+     */
+    const selectAll = (bool) => {
+        setItems((prevItems) => {
+            const updatedItems = prevItems.map((item) => {
+                return { ...item, checked: bool };
+            });
+            return updatedItems;
+        });
+    };
 
-    return (<>
-        <ReorderImages images={items} callback={updateImages} toggleSelect={toggleSelect} deleteImages={deleteImages} style={{ margin: '10%', left: '1%', position: 'relative' }} />
-        <IconButton
-            sx={{ color: 'red' }}
-            aria-label={`trash-all`}
-            onClick={() => deleteImages()}
-        >
-            <DeleteOutline />
-        </IconButton>
-    </>
+
+    return (
+        <>
+            <Bar items={items} deleteImages={deleteImages} selectAll={selectAll}/>
+            <ReorderImages images={items} callback={updateImages} toggleSelect={toggleSelect} deleteImages={deleteImages} style={{ margin: '10%', left: '1%', position: 'relative' }} />
+        </>
     );
 }
 

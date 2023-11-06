@@ -72,7 +72,7 @@ class ReorderImages extends Component {
                 {images.map((item, index) => {
                     if (index === 0) {
                         return (
-                            <ImageListItem key={`${item.title}-list`} id={`${index}-div`} onDrop={this.dropImage} onDragOver={this.imageDragOver}>
+                            <ImageListItem key={`${item.title}-list`} id={`${index}-div`} onDrop={this.dropImage} onDragOver={this.imageDragOver} className={item.selected ? 'image-selected' : ''}>
                                 <img
                                     src={item.img}
                                     srcSet={item.img}
@@ -82,6 +82,7 @@ class ReorderImages extends Component {
                                     draggable={true}
                                     onDragStart={this.imageDragStart}
                                     key={item.title}
+                                    className="image-hover"
                                 />
                                 <ImageListItemBar
                                     title={"Featured"}
@@ -124,6 +125,7 @@ class ReorderImages extends Component {
                                     draggable={true}
                                     onDragStart={this.imageDragStart}
                                     key={item.title}
+                                    className="image-hover image-selected"
                                 />
                                 <ImageListItemBar
                                     position="top"

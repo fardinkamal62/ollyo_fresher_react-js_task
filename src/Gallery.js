@@ -9,8 +9,8 @@ export default function Gallery() {
 
     const toggleSelect = (item) => {
         const title = item.title;
-        const index = items.findIndex((item) => item.title === title);
         setItems((prevItems) => {
+            const index = prevItems.findIndex((item) => item.title === title);
             const newItems = [...prevItems];
             newItems[index].checked = !newItems[index].checked;
             return newItems;
@@ -33,10 +33,6 @@ export default function Gallery() {
 
     const updateImages = (images) => setItems(() => images);
 
-    /**
-     * @function selectAll
-     * @param {Boolean} bool - true to select all, false to deselect all
-     */
     const selectAll = (bool) => {
         setItems((prevItems) => {
             const updatedItems = prevItems.map((item) => {

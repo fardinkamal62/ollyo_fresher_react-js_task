@@ -7,13 +7,6 @@ import DeleteOutline from '@mui/icons-material/DeleteOutline';
 import ImageListItem from '@mui/material/ImageListItem';
 import ImageList from '@mui/material/ImageList';
 
-function srcset(image, width, height, rows = 1, cols = 1) {
-    return {
-        src: `${image}?w=${width * cols}&h=${height * rows}&fit=crop&auto=format`,
-        srcSet: `${image}?w=${width * cols}&h=${height * rows}&fit=crop&auto=format&dpr=2 2x`,
-    };
-}
-
 function deepEqual(x, y) {
     const ok = Object.keys, tx = typeof x, ty = typeof y;
     return x && y && tx === 'object' && tx === ty ? (
@@ -79,9 +72,10 @@ class ReorderImages extends Component {
                 {images.map((item, index) => {
                     if (index === 0) {
                         return (
-                            <ImageListItem key={`${item.title}-list`} cols={15} id={`${index}-div`} rows={15} onDrop={this.dropImage} onDragOver={this.imageDragOver}>
+                            <ImageListItem key={`${item.title}-list`} id={`${index}-div`} onDrop={this.dropImage} onDragOver={this.imageDragOver}>
                                 <img
-                                    {...srcset(item.img, 250, 200, 2, 2)}
+                                    src={item.img}
+                                    srcSet={item.img}
                                     alt={item.title}
                                     loading="lazy"
                                     id={`${index}-img`}
@@ -122,7 +116,9 @@ class ReorderImages extends Component {
                         return (
                             <ImageListItem key={`${item.title}-list`} cols={1} rows={1} id={`${index}-div`} onDrop={this.dropImage} onDragOver={this.imageDragOver}>
                                 <img
-                                    {...srcset(item.img, 250, 200, 4, 4)}
+                                    src={item.img}
+                                    srcSet={item.img}
+                                    loading="lazy"
                                     id={`${index}-img`}
                                     alt={item.title}
                                     draggable={true}

@@ -10,7 +10,7 @@ export default function Bar({ items, deleteImages, selectAll }) {
     return (
         <>
             <div className='bar'>
-                {length > 0 ? <b>{length} {length === 1 ? 'Image' : 'Images'} Selected</b> : <b>Total {items.length} Images</b>}
+                {length > 0 ? <p>{length} {length === 1 ? 'Image' : 'Images'} Selected</p> : <p>Total {items.length} Images</p>}
                 {length > 0 && <IconButton
                     sx={{ color: 'red' }}
                     aria-label={`trash-all`}
@@ -18,18 +18,22 @@ export default function Bar({ items, deleteImages, selectAll }) {
                 >
                     <DeleteOutline />
                 </IconButton>}
-                <Button
-                    variant="contained"
-                    onClick={() => selectAll(false)}
-                >
-                    Deselect All
-                </Button>
-                <Button
-                    variant="contained"
-                    onClick={() => selectAll(true)}
-                >
-                    Select All
-                </Button>
+                <div>
+                    <Button
+                        variant="contained"
+                        onClick={() => selectAll(false)}
+                        style={{margin: '10px'}}
+                    >
+                        Deselect All
+                    </Button>
+                    <Button
+                        variant="contained"
+                        onClick={() => selectAll(true)}
+                        style={{margin: '10px'}}
+                    >
+                        Select All
+                    </Button>
+                </div>
             </div>
         </>
     );

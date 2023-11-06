@@ -1,66 +1,50 @@
 import * as React from 'react';
 import { useState } from "react";
-import ImageList from '@mui/material/ImageList';
-import ImageListItem from '@mui/material/ImageListItem';
-import ImageListItemBar from '@mui/material/ImageListItemBar';
+import DeleteOutline from '@mui/icons-material/DeleteOutline';
 import IconButton from '@mui/material/IconButton';
-import ReorderImages from './ReorderImages';
 
-function srcset(image, width, height, rows = 1, cols = 1) {
-    return {
-        src: `${image}?w=${width * cols}&h=${height * rows}&fit=crop&auto=format`,
-        srcSet: `${image}?w=${width * cols}&h=${height * rows
-            }&fit=crop&auto=format&dpr=2 2x`,
-    };
-}
+import ReorderImages from './ReorderImages';
 
 export default function Gallery() {
     const [items, setItems] = useState(itemData);
-    const [featured, setFeatured] = useState(itemData[0]);
 
-    const toggleFeatured = (item) => {
-        setFeatured(() => item);
-
+    const toggleSelect = (item) => {
         const title = item.title;
-        setItems((prevItemData) =>
-            prevItemData.map((item) =>
-                item.title === title ? { ...item, featured: !item.featured } : item
-            )
-        );
-
+        const index = items.findIndex((item) => item.title === title);
+        setItems((prevItems) => {
+            const newItems = [...prevItems];
+            newItems[index].checked = !newItems[index].checked;
+            return newItems;
+        });
     };
-    const updateImages = images => {
-        setItems(() => images);
-    }
+
+    const deleteImages = (image) => {
+        setItems((prevItems) => {
+            const updatedItems = prevItems.map((item) => {
+                if (image && item.title === image.title) {
+                    return { ...item, checked: true };
+                }
+                return item;
+            });
+            const remainingItems = updatedItems.filter((item) => !item.checked);
+            return remainingItems;
+        });
+    };
 
 
-    return (
-        <>
-            <ImageList sx={{}} gap={5} style={{ margin: '10%' }}>
-                <ImageListItem key={featured.img} cols={2} rows={2} style={{ marginBottom: '10%' }}>
-                    <img
-                        {...srcset(featured.img, 250, 200, 2, 2)}
-                        alt={featured.title}
-                        loading="lazy"
-                        onDragStart={(e) => e.preventDefault()}
-                    />
-                    <ImageListItemBar
-                        title={"Featured"}
-                        position="top"
-                        actionIcon={
-                            <IconButton
-                                sx={{ color: 'white' }}
-                                aria-label={`star ${featured.title}`}
-                            >
-                            </IconButton>
-                        }
-                        actionPosition="left"
-                    />
-                </ImageListItem>
-                {/* <Images items={items} featured={featured} toggleFeatured={toggleFeatured}/> */}
-                <ReorderImages images={items} featured={featured} callback={updateImages} />
-            </ImageList>
-        </>
+    const updateImages = (images) => setItems(() => images);
+
+
+    return (<>
+        <ReorderImages images={items} callback={updateImages} toggleSelect={toggleSelect} deleteImages={deleteImages} style={{ margin: '10%', left: '1%', position: 'relative' }} />
+        <IconButton
+            sx={{ color: 'red' }}
+            aria-label={`trash-all`}
+            onClick={() => deleteImages()}
+        >
+            <DeleteOutline />
+        </IconButton>
+    </>
     );
 }
 
@@ -95,7 +79,6 @@ const itemData = [
         img: 'https://images.unsplash.com/photo-1558642452-9d2a7deb7f62',
         title: 'Honey',
         author: '@arwinneil',
-        featured: true,
     },
     {
         img: 'https://images.unsplash.com/photo-1516802273409-68526ee1bdd6',

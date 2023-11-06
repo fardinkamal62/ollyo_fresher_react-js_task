@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import ImageListItemBar from '@mui/material/ImageListItemBar';
 import IconButton from '@mui/material/IconButton';
-import StarBorderIcon from '@mui/icons-material/StarBorder';
+import CheckBoxOutlineBlankOutlinedIcon from '@mui/icons-material/CheckBoxOutlineBlankOutlined';
+import CheckBoxOutlined from '@mui/icons-material/CheckBoxOutlined';
+import DeleteOutline from '@mui/icons-material/DeleteOutline';
 import ImageListItem from '@mui/material/ImageListItem';
+import ImageList from '@mui/material/ImageList';
 
 function srcset(image, width, height, rows = 1, cols = 1) {
     return {
@@ -11,15 +14,28 @@ function srcset(image, width, height, rows = 1, cols = 1) {
     };
 }
 
+function deepEqual(x, y) {
+    const ok = Object.keys, tx = typeof x, ty = typeof y;
+    return x && y && tx === 'object' && tx === ty ? (
+        ok(x).length === ok(y).length &&
+        ok(x).every(key => deepEqual(x[key], y[key]))
+    ) : (x === y);
+}
 
 class ReorderImages extends Component {
     constructor(props) {
-        super();
-        const { images } = props;
+        super(props);
+        const { images, style, toggleSelect, deleteImages } = props;
         this.state = {
-            images,
+            images, style, toggleSelect, deleteImages
         };
         this.dragId = '';
+    }
+
+    componentDidUpdate(prevProps) {
+        if (!deepEqual(prevProps.images, this.props.images)) {
+            this.setState({ images: this.props.images });
+        }
     }
 
     imageDragOver = ev => ev.preventDefault();
@@ -51,40 +67,106 @@ class ReorderImages extends Component {
     };
 
     render() {
-        const { images } = this.state;
+        const { images, style, toggleSelect, deleteImages } = this.state;
+        if (!images || images.length < 1) return null;
+
         return (
-            <div>
-                {images &&
-                    images.length > 0 &&
-                    images.map((item, index) => {
+            <ImageList
+                variant="masonry"
+                cols={4}
+                style={style ? style : {}}
+            >
+                {images.map((item, index) => {
+                    if (index === 0) {
                         return (
-                            <ImageListItem key={item.img} cols={1} rows={1} id={`${index}-div`} onDrop={this.dropImage} onDragOver={this.imageDragOver}>
+                            <ImageListItem key={`${item.title}-list`} cols={15} id={`${index}-div`} rows={15} onDrop={this.dropImage} onDragOver={this.imageDragOver}>
                                 <img
-                                    {...srcset(item.img, 250, 200, 1, 1)}
-                                    id={`${index}-img`}
+                                    {...srcset(item.img, 250, 200, 2, 2)}
                                     alt={item.title}
+                                    loading="lazy"
+                                    id={`${index}-img`}
                                     draggable={true}
                                     onDragStart={this.imageDragStart}
-                                    data-holder-rendered='true'
+                                    key={item.title}
                                 />
                                 <ImageListItemBar
-                                    title={item.title}
+                                    title={"Featured"}
                                     position="top"
+                                    draggable={true}
+                                    onDragStart={this.imageDragStart}
+                                    id={`${index}-bar`}
                                     actionIcon={
-                                        <IconButton
-                                            sx={{ color: 'white' }}
-                                            aria-label={`star ${item.title}`}
-                                        >
-                                            <StarBorderIcon />
-                                        </IconButton>
+                                        <>
+                                            <IconButton
+                                                sx={{ color: 'white' }}
+                                                aria-label={`star ${item.title}`}
+                                                onClick={() => toggleSelect(item)}
+                                            >
+                                                {item.checked ? <CheckBoxOutlined /> : <CheckBoxOutlineBlankOutlinedIcon />}
+                                            </IconButton>
+                                            <IconButton
+                                                sx={{ color: 'white' }}
+                                                aria-label={`trash ${item.title}`}
+                                                onClick={() => deleteImages(item)}
+                                            >
+                                                <DeleteOutline />
+                                            </IconButton>
+                                        </>
                                     }
                                     actionPosition="left"
                                 />
                             </ImageListItem>
-                        );
-                    })}
-            </div>
-        );
+                        )
+                    }
+                    else {
+                        return (
+                            <ImageListItem key={`${item.title}-list`} cols={1} rows={1} id={`${index}-div`} onDrop={this.dropImage} onDragOver={this.imageDragOver}>
+                                <img
+                                    {...srcset(item.img, 250, 200, 4, 4)}
+                                    id={`${index}-img`}
+                                    alt={item.title}
+                                    draggable={true}
+                                    onDragStart={this.imageDragStart}
+                                    key={item.title}
+                                />
+                                <ImageListItemBar
+                                    position="top"
+                                    draggable={true}
+                                    onDragStart={this.imageDragStart}
+                                    id={`${index}-bar`}
+                                    actionIcon={
+                                        <>
+                                            <IconButton
+                                                sx={{ color: 'white' }}
+                                                aria-label={`star ${item.title}`}
+                                                onClick={() => toggleSelect(item)}
+                                            >
+                                                {item.checked ? <CheckBoxOutlined /> : <CheckBoxOutlineBlankOutlinedIcon />}
+                                            </IconButton>
+                                            <IconButton
+                                                sx={{ color: 'white' }}
+                                                aria-label={`trash ${item.title}`}
+                                                onClick={() => deleteImages(item)}
+                                            >
+                                                <DeleteOutline />
+                                            </IconButton>
+                                        </>
+                                    }
+                                    actionPosition="left"
+                                />
+                            </ImageListItem>
+                        )
+                    }
+                })}
+            </ImageList>
+        )
     }
 }
 export default ReorderImages;
+
+
+
+/*
+Credit: https://github.com/syadav214/react-reorder-images
+Proudly copied, skillfully modified
+*/
